@@ -6,8 +6,8 @@ export const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("BODY:", req.body);
-    console.log("EMAIL:", email);
+    // console.log("BODY:", req.body);
+    // console.log("EMAIL:", email);
 
     if (!email || !password) {
       return res.status(400).json({ message: "All fields required" });
@@ -17,7 +17,7 @@ export const loginAdmin = async (req, res) => {
       email: email.toLowerCase().trim()
     });
 
-    console.log("ADMIN:", admin);
+    // console.log("ADMIN:", admin);
 
     if (!admin) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -25,7 +25,7 @@ export const loginAdmin = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, admin.password);
 
-    console.log("MATCH:", isMatch);
+    // console.log("MATCH:", isMatch);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
