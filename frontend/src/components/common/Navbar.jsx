@@ -96,7 +96,7 @@ const closeAllMenus = () => {
 
   setTimeout(() => {
     document.body.classList.remove("mega-close");
-  }, 100);
+  }, 300); // Increased timeout for better reliability
 };
 
   // Helper for Desktop Active States
@@ -151,7 +151,11 @@ const closeAllMenus = () => {
             </NavLink>
 
             {/* Colleges Mega Menu */}
-            <div className="relative group h-20 flex items-center px-1">
+            <div 
+              className="relative group h-20 flex items-center px-1"
+              onMouseEnter={() => setShowColleges(true)}
+              onMouseLeave={() => setShowColleges(false)}
+            >
               <NavLink
                 to="/all-college"
                 onClick={closeAllMenus}
@@ -163,7 +167,7 @@ const closeAllMenus = () => {
                 </span>
               </NavLink>
               <div className="absolute top-full left-0 w-full h-5 bg-transparent z-20"></div>
-              <div className="invisible opacity-0 translate-y-2.5 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 -translate-x-1/2 left-1/2 absolute top-full w-[700px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 transition-all duration-200 ease-out z-50 pointer-events-none group-hover:pointer-events-auto">
+              <div className={`${showColleges ? "visible opacity-100 translate-y-0 pointer-events-auto" : "invisible opacity-0 translate-y-2.5 pointer-events-none"} -translate-x-1/2 left-1/2 absolute top-full w-[700px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 transition-all duration-200 ease-out z-50`}>
                 <div
                   className="grid grid-cols-3 gap-8"
                   onClick={closeAllMenus}
@@ -322,7 +326,11 @@ const closeAllMenus = () => {
             </div>
 
             {/* Courses Mega Menu */}
-            <div className="relative group h-20 flex items-center px-1">
+            <div 
+              className="relative group h-20 flex items-center px-1"
+              onMouseEnter={() => setShowCourses(true)}
+              onMouseLeave={() => setShowCourses(false)}
+            >
               <NavLink
                 to="/all-course"
                 onClick={closeAllMenus}
@@ -335,7 +343,7 @@ const closeAllMenus = () => {
               </NavLink>
 
               <div className="absolute top-full left-0 w-full h-5 bg-transparent z-20"></div>
-              <div className="invisible opacity-0 translate-y-2.5 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 -translate-x-1/2 left-1/2 absolute top-full w-[1250px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 transition-all duration-200 ease-out z-50 pointer-events-none group-hover:pointer-events-auto">
+              <div className={`${showCourses ? "visible opacity-100 translate-y-0 pointer-events-auto" : "invisible opacity-0 translate-y-2.5 pointer-events-none"} -translate-x-1/2 left-1/2 absolute top-full w-[1250px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 transition-all duration-200 ease-out z-50`}>
                 <div className="grid grid-cols-5 gap-6 divide-x divide-slate-50">
                   {/* Engineering */}
                   <div className="px-2">
@@ -565,7 +573,11 @@ const closeAllMenus = () => {
 
           <div className="hidden lg:flex items-center gap-4">
             {/* Exams Mega Menu */}
-            <div className="relative group h-20 flex items-center">
+            <div 
+              className="relative group h-20 flex items-center"
+              onMouseEnter={() => setShowExams(true)}
+              onMouseLeave={() => setShowExams(false)}
+            >
               {/* Link aur NavLink logic: Click par menu close hoga aur active page par red border dikhega */}
               <NavLink
                 to="/all-exams"
@@ -594,7 +606,7 @@ const closeAllMenus = () => {
               {/* Bridge to prevent menu from closing during mouse movement */}
               <div className="absolute top-full left-0 w-full h-5 bg-transparent z-20"></div>
 
-              <div className="invisible opacity-0 translate-y-2.5 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 right-0 absolute top-16 w-[950px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 z-50 transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto">
+              <div className={`${showExams ? "visible opacity-100 translate-y-0 pointer-events-auto" : "invisible opacity-0 translate-y-2.5 pointer-events-none"} right-0 absolute top-16 w-[950px] bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-slate-100 p-8 z-50 transition-all duration-200 ease-out`}>
                 <div className="grid grid-cols-5 divide-x divide-slate-50 gap-6">
                   {/* Engineering Section */}
                   <div className="px-2">
