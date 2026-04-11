@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Select from "react-select";
 import {
   User,
   Mail,
@@ -10,15 +11,53 @@ import {
 import api from "../../Services/api";
 import { X } from "lucide-react";
 
-export default function EnquiryForm({ defaultCourse = "", onClose , onSuccess}) {
+export default function EnquiryForm({
+  defaultCourse = "",
+  onClose,
+  onSuccess,
+}) {
   const initialFormState = {
     name: "",
     email: "",
     phone: "",
     course: defaultCourse,
     consent: false,
-   
   };
+
+  const courseOptions = [
+    {
+      label: "Medical",
+      options: [
+        { value: "MBBS", label: "MBBS" },
+        { value: "MBBS / PG", label: "MBBS / PG" },
+        { value: "BDS", label: "BDS" },
+        { value: "MDS", label: "MDS" },
+        { value: "BAMS", label: "BAMS" },
+        { value: "BAMS PG", label: "BAMS PG" },
+        { value: "Nursing", label: "Nursing" },
+        { value: "Pharmacy", label: "Pharmacy" },
+        { value: "BPT", label: "BPT" },
+      ],
+    },
+    {
+      label: "Engineering",
+      options: [
+        { value: "B.Tech", label: "B.Tech" },
+        { value: "M.Tech", label: "M.Tech" },
+        { value: "B.Arch", label: "B.Arch" },
+      ],
+    },
+    {
+      label: "Management",
+      options: [
+        { value: "BBA", label: "BBA" },
+        { value: "MBA", label: "MBA" },
+        { value: "BCA", label: "BCA" },
+        { value: "MCA", label: "MCA" },
+        { value: "Fashion Designing", label: "Fashion Designing" },
+      ],
+    },
+  ];
 
   const [form, setForm] = useState(initialFormState);
   const [submitted, setSubmitted] = useState(false);
@@ -119,22 +158,34 @@ export default function EnquiryForm({ defaultCourse = "", onClose , onSuccess}) 
             />
 
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                <BookOpen className="w-4 h-4" />
-              </div>
-              <select
-                name="course"
-                value={form.course}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border rounded-xl text-sm"
-                required
-              >
-                <option value="">Select Course</option>
-                <option>B.Tech</option>
-                <option>BBA</option>
-                <option>MBA</option>
-                <option>MBBS</option>
-              </select>
+              <Select
+                options={courseOptions}
+                placeholder="Select Course"
+                onChange={(selected) =>
+                  setForm((prev) => ({ ...prev, course: selected.value }))
+                }
+                menuPortalTarget={document.body} // ✅ important
+                menuPosition="fixed" // ✅ important
+                menuShouldScrollIntoView={false} // ✅ scroll jump fix
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    borderRadius: "16px",
+                    padding: "6px",
+                    borderColor: "#e2e8f0",
+                    boxShadow: "none",
+                  }),
+                  menuPortal: (base) => ({
+                    ...base,
+                    zIndex: 9999, // 🔥 dropdown popup ke upar aayega
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                  }),
+                }}
+              />
             </div>
 
             <label className="flex items-center gap-2 text-xs text-slate-500">

@@ -10,6 +10,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import api from "../../Services/api";
+import Select from "react-select";
 
 export default function EnquiryForm({
   defaultCourse = "",
@@ -23,6 +24,34 @@ export default function EnquiryForm({
     course: defaultCourse,
     consent: false,
   };
+  const courseOptions = [
+    {
+      label: "Medical",
+      options: [
+        { value: "MBBS", label: "MBBS" },
+        { value: "MBBS / PG", label: "MBBS / PG" },
+        { value: "BDS", label: "BDS" },
+        { value: "MDS", label: "MDS" },
+        { value: "BAMS", label: "BAMS" },
+        { value: "Nursing", label: "Nursing" },
+      ],
+    },
+    {
+      label: "Engineering",
+      options: [
+        { value: "B.Tech", label: "B.Tech" },
+        { value: "M.Tech", label: "M.Tech" },
+      ],
+    },
+    {
+      label: "Management",
+      options: [
+        { value: "BBA", label: "BBA" },
+        { value: "MBA", label: "MBA" },
+        { value: "BCA", label: "BCA" },
+      ],
+    },
+  ];
 
   const [form, setForm] = useState(initialFormState);
   const [submitted, setSubmitted] = useState(false);
@@ -120,36 +149,53 @@ export default function EnquiryForm({
             />
 
             {/* Course Selector */}
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 pointer-events-none">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 pointer-events-none z-10">
                 <BookOpen size={16} />
               </div>
-              <select
-                name="course"
-                value={form.course}
-                onChange={handleChange}
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 backdrop-blur-md text-white outline-none text-sm font-medium placeholder-white/50 focus:bg-white/15 focus:border-white transition-all appearance-none cursor-pointer"
-                required
-              >
-                <option value="" className="bg-[#0B1C33]">
-                  Select Course
-                </option>
-                <option value="B.Tech" className="bg-[#0B1C33]">
-                  B.Tech
-                </option>
-                <option value="BBA" className="bg-[#0B1C33]">
-                  BBA
-                </option>
-                <option value="MBA" className="bg-[#0B1C33]">
-                  MBA
-                </option>
-                <option value="MBBS" className="bg-[#0B1C33]">
-                  MBBS
-                </option>
-              </select>
-              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none opacity-50">
-                <div className="border-l border-t border-white w-2 h-2 rotate-[225deg] mt-[-4px]"></div>
-              </div>
+
+              <Select
+                options={courseOptions}
+                placeholder="Select Course"
+                onChange={(selected) =>
+                  setForm((prev) => ({ ...prev, course: selected.value }))
+                }
+                menuPortalTarget={document.body} // 🔥 scroll fix
+                menuPosition="fixed" // 🔥 position fix
+                menuShouldScrollIntoView={false}
+                className="text-sm"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    borderRadius: "12px",
+                    paddingLeft: "36px",
+                    color: "white",
+                    minHeight: "44px",
+                    boxShadow: "none",
+                  }),
+                  singleValue: (base) => ({
+                    ...base,
+                    color: "white",
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                  }),
+                  menuPortal: (base) => ({
+                    ...base,
+                    zIndex: 9999, // 🔥 popup ke upar
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    backgroundColor: state.isFocused ? "#0f2d52" : "white",
+                    color: state.isFocused ? "white" : "black",
+                    fontSize: "14px",
+                  }),
+                }}
+              />
             </div>
 
             {/* Consent Checkbox */}
