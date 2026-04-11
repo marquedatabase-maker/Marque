@@ -20,7 +20,7 @@ const CollegeCardPage = () => {
     state: [],
   });
 
-  /* ================= FETCH DATA ================= */
+  /* ================= FETCH ================= */
   const fetchInstitutes = async () => {
     try {
       setLoading(true);
@@ -37,14 +37,13 @@ const CollegeCardPage = () => {
 
       setInstitutes(allData);
 
-      // 🔥 First load only
       const firstChunk = allData.slice(0, ITEMS_PER_LOAD);
       setVisibleInstitutes(firstChunk);
 
       setPage(1);
       setHasMore(allData.length > ITEMS_PER_LOAD);
     } catch (error) {
-      console.error("Error fetching institutes:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +51,9 @@ const CollegeCardPage = () => {
 
   /* ================= LOAD MORE ================= */
   const loadMore = () => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return;
+
+    setLoading(true); // 🔥 prevent double trigger
 
     const nextPage = page + 1;
     const start = page * ITEMS_PER_LOAD;
@@ -62,83 +63,92 @@ const CollegeCardPage = () => {
 
     if (nextChunk.length === 0) {
       setHasMore(false);
+      setLoading(false);
       return;
     }
 
-    setVisibleInstitutes((prev) => [...prev, ...nextChunk]);
+    setVisibleInstitutes((prev) => {
+      const newData = [...prev, ...nextChunk];
+
+      // 🔥 REMOVE DUPLICATES
+      const unique = Array.from(
+        new Map(newData.map((item) => [item._id, item])).values()
+      );
+
+      return unique;
+    });
+
     setPage(nextPage);
+    setLoading(false);
   };
 
-  /* ================= SCROLL LISTENER ================= */
+  /* ================= SCROLL ================= */
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        loadMore();
-      }
+      if (ticking) return;
+
+      ticking = true;
+
+      setTimeout(() => {
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const fullHeight = document.documentElement.scrollHeight;
+
+        if (scrollTop + windowHeight >= fullHeight - 150) {
+          loadMore();
+        }
+
+        ticking = false;
+      }, 200);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [page, hasMore, institutes]);
+  }, [page, hasMore]);
 
-  /* ================= FILTER CHANGE ================= */
+  /* ================= FILTER ================= */
   useEffect(() => {
     fetchInstitutes();
-    // eslint-disable-next-line
   }, [filters]);
 
   return (
     <>
-      {/* 🔥 HERO SEARCH */}
       <CollegeSearchHero
         institutes={institutes}
         onSearch={setVisibleInstitutes}
       />
 
-      {/* MAIN CONTENT */}
-      <div className="min-20px bg-slate-50">
+      <div className="bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8">
-          {/* FILTER SIDEBAR */}
-
-          <aside className="w-full lg:w-[300px] shrink-0">
+          <aside className="w-full lg:w-[300px]">
             <FilterSidebar filters={filters} setFilters={setFilters} />
           </aside>
 
-          {/* LIST */}
           <main className="flex-1 space-y-6">
             <div className="mb-6 flex justify-between items-center">
               <h1 className="text-2xl font-bold text-[#0B1C33]">
                 All Institutes
-                <span className="ml-2 text-sm font-medium text-[#0B1C33] bg-white px-3 py-1 rounded-full border border-slate-200">
+                <span className="ml-2 text-sm bg-white px-3 py-1 rounded border">
                   {institutes.length} Found
                 </span>
               </h1>
             </div>
+
             {visibleInstitutes.map((item) => (
               <InstituteCard key={item._id} data={item} />
             ))}
 
-            {/* LOADING TEXT */}
             {loading && (
-              <p className="text-center text-slate-400 text-sm">
+              <p className="text-center text-slate-400">
                 Loading colleges...
               </p>
             )}
 
-            {/* NO RESULTS */}
-            {!loading && visibleInstitutes.length === 0 && (
-              <p className="text-center text-slate-400 font-medium py-20">
-                No colleges found matching your filters.
-              </p>
-            )}
-
-            {/* END MESSAGE */}
             {!hasMore && visibleInstitutes.length > 0 && (
-              <p className="text-center text-slate-400 text-sm pt-6">
-                You’ve reached the end of the list.
+              <p className="text-center text-slate-400">
+                You’ve reached the end.
               </p>
             )}
           </main>
