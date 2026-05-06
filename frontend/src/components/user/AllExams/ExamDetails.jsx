@@ -83,7 +83,7 @@ const ExamDetails = () => {
     try {
       setLoading(true);
       setError("");
-      const res = await axios.get(`${API_BASE}/api/xams/slug/${slug}`);
+      const res = await axios.get(`${API_BASE}/api/Exams/slug/${slug}`);
       if (res.data.success && res.data.data) {
         setExam(res.data.data);
       } else {
