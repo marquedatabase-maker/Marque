@@ -21,7 +21,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE =import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // ── Toast Notification ───────────────────────────────────────────────────────
 const Toast = ({ toasts, removeToast }) => (
@@ -226,7 +226,7 @@ function ManageExams() {
   const fetchExams = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/exams?isAdmin=true`);
+      const res = await axios.get(`${API_BASE}/api/exams?isAdmin=true`);
       const data = res.data.exams || [];
       setExams(data);
       setStats({
@@ -256,7 +256,7 @@ function ManageExams() {
     }));
     try {
       setActionLoading((prev) => ({ ...prev, [id]: "status" }));
-      const res = await axios.patch(`${API_BASE}/exams/${id}/status`, {
+      const res = await axios.patch(`${API_BASE}/api/exams/${id}/status`, {
         status: newStatus,
       });
       if (res.data.success) {
@@ -290,7 +290,7 @@ function ManageExams() {
     if (!deleteTarget) return;
     try {
       setDeleteLoading(true);
-      await axios.delete(`${API_BASE}/exams/${deleteTarget._id}`);
+      await axios.delete(`${API_BASE}/api/exams/${deleteTarget._id}`);
       addToast(`"${deleteTarget.name}" deleted successfully!`);
       setDeleteTarget(null);
       await fetchExams();

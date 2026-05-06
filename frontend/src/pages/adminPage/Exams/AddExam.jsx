@@ -19,7 +19,7 @@ import {
   Wand2,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE =import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const initialFormState = {
   name: "",
@@ -69,7 +69,7 @@ const AddExam = () => {
       setFetchLoading(true);
       setSlugManuallyEdited(true);
       axios
-        .get(`${API_BASE}/exams/${id}`)
+        .get(`${API_BASE}/api/exams/${id}`)
         .then((res) => {
           if (res.data.success && res.data.exam) {
             const exam = res.data.exam;
@@ -187,7 +187,7 @@ const AddExam = () => {
 
     try {
       const payload = { ...formData, status, _id: id || undefined };
-      const res = await axios.post(`${API_BASE}/exams`, payload);
+      const res = await axios.post(`${API_BASE}/api/exams`, payload);
 
       if (res.data.success) {
         const msg = id
