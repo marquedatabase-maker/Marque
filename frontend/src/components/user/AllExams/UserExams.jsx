@@ -60,7 +60,7 @@ const UserExams = () => {
       setLoading(true);
       setError("");
       // isPublished:true is enforced on backend when isAdmin is not "true"
-      const res = await axios.get(`${API_BASE}/exams`);
+      const res = await axios.get(`${API_BASE}/api/exams`);
       if (res.data.success) {
         setExams(res.data.exams);
       }

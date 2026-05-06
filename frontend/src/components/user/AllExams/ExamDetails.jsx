@@ -45,7 +45,7 @@ const ExamDetails = () => {
   const fetchNotifications = async () => {
     try {
       setNotifLoading(true);
-      const res = await axios.get(`${API_BASE}/notifications`);
+      const res = await axios.get(`${API_BASE}/api/notifications`);
       if (res.data.success) {
         const examAlerts = res.data.data
           .filter(
@@ -65,7 +65,7 @@ const ExamDetails = () => {
   const fetchColleges = async (examName) => {
     try {
       setCollegesLoading(true);
-      const res = await axios.get(`${API_BASE}/institutes`, {
+      const res = await axios.get(`${API_BASE}/api/institutes`, {
         params: { examsAccepted: examName },
       });
       if (res.data.institutes) {
@@ -83,7 +83,7 @@ const ExamDetails = () => {
     try {
       setLoading(true);
       setError("");
-      const res = await axios.get(`${API_BASE}/exams/slug/${slug}`);
+      const res = await axios.get(`${API_BASE}/api/xams/slug/${slug}`);
       if (res.data.success && res.data.data) {
         setExam(res.data.data);
       } else {
